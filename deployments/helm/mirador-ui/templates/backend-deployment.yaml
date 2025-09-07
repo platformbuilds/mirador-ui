@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mirador-backend
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: mirador-backend
+  template:
+    metadata:
+      labels:
+        app: mirador-backend
+    spec:
+      containers:
+        - name: backend
+          image: {{ .Values.backend.image }}
+          ports:
+            - containerPort: 8080
+          env: {{- toYaml .Values.backend.env | nindent 12 }}
+          resources: {{- toYaml .Values.backend.resources | nindent 12 }}
+

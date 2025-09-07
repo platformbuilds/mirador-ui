@@ -1,0 +1,32 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: npm install --workspaces --no-audit --no-fund
+        working-directory: public/mirador-ui
+      - name: Lint
+        run: npx eslint "packages/**/*.{ts,tsx}" || true
+        working-directory: public/mirador-ui
+      - name: Build
+        run: npm run build
+        working-directory: public/mirador-ui
+      - name: Test Backend
+        run: npm -w @mirador/backend run test
+        working-directory: public/mirador-ui
+      - name: Test Frontend
+        run: npm -w @mirador/frontend run test -- --run
+        working-directory: public/mirador-ui
+

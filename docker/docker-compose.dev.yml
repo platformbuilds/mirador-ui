@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  valkey:
+    image: valkey/valkey:7-alpine
+    ports:
+      - '6379:6379'
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mirador
+    ports:
+      - '3306:3306'
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/backend.Dockerfile
+    environment:
+      NODE_ENV: development
+      PORT: 8080
+      CORS_ORIGIN: http://localhost:5173
+      REDIS_HOST: valkey
+      REDIS_PORT: 6379
+      DATABASE_URL: mysql://root:root@mysql:3306/mirador
+    ports:
+      - '8080:8080'
+    depends_on:
+      - valkey
+      - mysql
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - '5173:80'
+    depends_on:
+      - backend
+

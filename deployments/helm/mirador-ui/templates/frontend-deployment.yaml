@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mirador-frontend
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      app: mirador-frontend
+  template:
+    metadata:
+      labels:
+        app: mirador-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: {{ .Values.frontend.image }}
+          ports:
+            - containerPort: 80
+          resources: {{- toYaml .Values.frontend.resources | nindent 12 }}
+

@@ -1,0 +1,26 @@
+{
+  "name": "mirador-ui",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm -w @mirador/backend run build && npm -w @mirador/frontend run build",
+    "dev": "npm -w @mirador/backend run dev & npm -w @mirador/frontend run dev",
+    "lint": "eslint \"packages/**/*.{ts,tsx}\"",
+    "typecheck": "tsc -b",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsonc": "^2.15.1",
+    "eslint-plugin-simple-import-sort": "^12.1.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.4.5"
+  }
+}
+

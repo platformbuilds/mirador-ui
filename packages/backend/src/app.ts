@@ -14,6 +14,9 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { CacheService } from './cache/CacheService.js';
 import { openApiSpec } from './openapi.js';
 import { authRoutes } from './routes/auth.js';
+import { miradorRoutes } from './routes/mirador.js';
+import { dashboardRoutes } from './routes/dashboard.js';
+import { timelineRoutes } from './routes/timeline.js';
 
 export async function createApp() {
   const app = express();
@@ -34,6 +37,9 @@ export async function createApp() {
   const router = express.Router();
   healthRoutes(router);
   authRoutes(router);
+  miradorRoutes(router, cache);
+  dashboardRoutes(router);
+  timelineRoutes(router);
   app.use('/api', router);
 
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openApiSpec));
@@ -42,4 +48,3 @@ export async function createApp() {
 
   return app;
 }
-

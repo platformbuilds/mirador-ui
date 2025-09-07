@@ -1,4 +1,4 @@
-```
+```yaml
 API Integration Layers:
 ├── Frontend API Client:
 │   ├── React Query for data fetching and caching

@@ -1,4 +1,4 @@
-```
+```yaml
 Performance Targets:
 ├── Frontend Performance:
 │   ├── Initial page load: <3 seconds

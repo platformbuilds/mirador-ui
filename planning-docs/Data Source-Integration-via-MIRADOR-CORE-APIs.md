@@ -1,4 +1,4 @@
-```
+```yaml
 IMPACT Layer (Business Transaction Logs):
 ├── Data Source: JSON Transaction Logs
 ├── API Endpoint: POST /api/v1/logs/query (LogsQL)
@@ -41,9 +41,9 @@ CAUSATION Layer (Technical Metrics & Traces):
 └── Application Logs (System Events):
     ├── API Endpoint: POST /api/v1/logs/query
     ├── Log Fields Discovery: GET /api/v1/logs/fields
-```
     ├── Key Events:
     │   ├── Application errors and exceptions
     │   ├── Database connection issues
     │   ├── Memory/CPU alerts
     │   └── Service restart events
+```

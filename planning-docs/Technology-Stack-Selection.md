@@ -1,4 +1,4 @@
-```
+```yaml
 Frontend Technologies:
 ├── Core Framework: React 18 + TypeScript 5.x
 ├── Build Tool: Vite (faster than Webpack)

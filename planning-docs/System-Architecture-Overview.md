@@ -1,4 +1,4 @@
-```
+```yaml
 mirador-ui Architecture:
 ├── Frontend Layer (React + TypeScript + D3.js):
 │   ├── Dashboard Builder Interface

@@ -1,4 +1,4 @@
-```
+```yaml
 MIRADOR-CORE API Integration:
 ├── Business Impact Detection:
 │   ├── Transaction Logs: POST /api/v1/logs/query

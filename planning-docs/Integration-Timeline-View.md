@@ -1,4 +1,4 @@
-```
+```yaml
 Master Timeline Dashboard:
 ├── 🕐 Chronological Event Correlation (15-minute window):
 │   ├── T-180s: 

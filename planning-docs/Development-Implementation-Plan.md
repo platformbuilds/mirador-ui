@@ -1,5 +1,5 @@
 ## Phase 1: Foundation Setup
-```
+```yaml
 Sprint 1: Project Initialization
 ├── Development Environment:
 │   ├── Set up monorepo structure with npm workspaces
@@ -27,8 +27,7 @@ Sprint 1: Project Initialization
 ```
 
 ## Phase 2: Core API Integration
-
-```
+```yaml
 Sprint 2: MIRADOR-CORE Integration
 ├── API Client Development:
 │   ├── Complete MIRADOR-CORE API client
@@ -57,7 +56,7 @@ Sprint 2: MIRADOR-CORE Integration
 ```
 
 ## Phase 3: Timeline Correlation Interface
-```
+```yaml
 Sprint 3: Timeline Visualization
 ├── Timeline Component Development:
 │   ├── D3.js timeline visualization engine
@@ -86,7 +85,7 @@ Sprint 3: Timeline Visualization
 ```
 
 ## Phase 4: Dashboard Builder
-```
+```yaml
 Sprint 4: Self-Service Dashboard Builder
 ├── Dashboard Builder Interface:
 │   ├── Drag-and-drop canvas implementation
@@ -115,7 +114,7 @@ Sprint 4: Self-Service Dashboard Builder
 ```
 
 ## Phase 5: Production Readiness
-```
+```yaml
 Sprint 5: Production Deployment
 ├── Performance Optimization:
 │   ├── Frontend bundle optimization

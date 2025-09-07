@@ -12,3 +12,5 @@ frontend:
 ingress:
   enabled: false
 
+miradorCore:
+  url: "http://mirador-core.mirador-dev.svc.cluster.local:9000"

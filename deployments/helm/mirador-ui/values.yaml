@@ -41,3 +41,8 @@ ingress:
   className: "nginx"
   host: "your.domain"
 
+miradorCore:
+  # Base URL for MIRADOR-CORE service used by backend
+  # Example for same-namespace service: http://mirador-core:9000
+  # Example with namespace: http://mirador-core.default.svc.cluster.local:9000
+  url: "http://mirador-core.default.svc.cluster.local:9000"

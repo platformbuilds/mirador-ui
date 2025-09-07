@@ -19,6 +19,7 @@ services:
       NODE_ENV: development
       PORT: 8080
       CORS_ORIGIN: http://localhost:5173
+      MIRADOR_CORE_URL: http://localhost:9000
       REDIS_HOST: valkey
       REDIS_PORT: 6379
       DATABASE_URL: mysql://root:root@mysql:3306/mirador
@@ -35,4 +36,3 @@ services:
       - '5173:80'
     depends_on:
       - backend
-

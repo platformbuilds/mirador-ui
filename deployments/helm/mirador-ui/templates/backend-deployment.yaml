@@ -17,6 +17,10 @@ spec:
           image: {{ .Values.backend.image }}
           ports:
             - containerPort: 8080
-          env: {{- toYaml .Values.backend.env | nindent 12 }}
+          env:
+            {{- toYaml .Values.backend.env | nindent 12 }}
+            {{- if .Values.miradorCore.url }}
+            - name: MIRADOR_CORE_URL
+              value: {{ .Values.miradorCore.url | quote }}
+            {{- end }}
           resources: {{- toYaml .Values.backend.resources | nindent 12 }}
-

@@ -28,3 +28,5 @@ ingress:
   className: "nginx"
   host: "your.domain"
 
+miradorCore:
+  url: "http://mirador-core.your-namespace.svc.cluster.local:9000"

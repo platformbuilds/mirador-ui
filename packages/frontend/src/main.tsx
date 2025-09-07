@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom';
+import BuilderPage from './pages/Builder';
 import TimelinePage from './pages/Timeline';
 import type { Dashboard, PrometheusVectorResult } from '@mirador/shared';
 import './styles.css';
@@ -88,19 +89,29 @@ function Login() {
 function Dashboards() {
   const [items, setItems] = React.useState<Dashboard[]>([]);
   const [error, setError] = React.useState<any>(null);
+  const nav = useNavigate();
   React.useEffect(() => {
     api('/dashboards')
       .then((r) => r.json())
       .then(setItems)
       .catch(setError);
   }, []);
+  async function createDashboard() {
+    const name = prompt('Dashboard name?', 'New Dashboard');
+    const res = await api('/dashboards', { method: 'POST', body: JSON.stringify({ name: name || 'New Dashboard', config: { widgets: [] } }) });
+    if (res.ok) {
+      const d = await res.json();
+      nav(`/builder/${d.id}`);
+    }
+  }
   return (
     <div className="container">
       <h2>Dashboards</h2>
       {error && <pre>{String(error)}</pre>}
+      <button onClick={() => void createDashboard()}>Create Dashboard</button>
       <ul>
         {items.map((d) => (
-          <li key={d.id}>{d.name}</li>
+          <li key={d.id}><Link to={`/builder/${d.id}`}>{d.name}</Link></li>
         ))}
       </ul>
     </div>
@@ -137,6 +148,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/dashboards" element={<Dashboards />} />
           <Route path="/metrics" element={<MetricsDemo />} />
           <Route path="/timeline" element={<TimelinePage />} />
+          <Route path="/builder/:id" element={<BuilderPage />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

@@ -24,16 +24,45 @@ export function timelineRoutes(router: Router) {
       const cpu = await dl.rangeQuery(`100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)`, start, end, step);
       const mem = await dl.rangeQuery(`(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100`, start, end, step);
       const disk = await dl.rangeQuery(`rate(node_disk_io_time_seconds_total[5m]) * 100`, start, end, step);
-      // Log-derived success rate by orgId
+      // Application-layer metrics
+      const kafkaLag = await dl.rangeQuery(`kafka_consumer_lag_total`, start, end, step);
+      const cassandraReadP95 = await dl.rangeQuery(`cassandra_read_latency_seconds{quantile="0.95"}`, start, end, step);
+      const redisHitRate = await dl.rangeQuery(`rate(redis_keyspace_hits_total[5m]) / (rate(redis_keyspace_hits_total[5m]) + rate(redis_keyspace_misses_total[5m])) * 100`, start, end, step);
+      // Log-derived signals
       const success = await dl.successRate('15m');
+      const processing = await dl.processingTime('1h');
+      const patterns = await dl.errorPatterns('1h');
+
+      // Basic impact severity and confidence
+      let severity = 'normal';
+      let confidence = 0.5;
+      try {
+        const srItems = (success as any)?.data?.result || (success as any)?.result || [];
+        const orgRow = srItems.find((r: any) => (r.metric?.orgId || r.orgId) === orgId) || srItems[0];
+        const rate = Number(orgRow?.value?.[1] || orgRow?.success_rate || 99);
+        if (rate < 95) { severity = 'critical'; confidence = 0.9; }
+        else if (rate < 98) { severity = 'warning'; confidence = 0.7; }
+      } catch {}
+
+      // Trace-based simple summary (stub)
+      let tracesSummary: any = { total: 0, byService: {}, errors: 0 };
+      try {
+        const tr = await dl.traceSearch({ limit: 20, lookback: '15m' });
+        tracesSummary = dl.summarizeTraceSearch(tr);
+      } catch {}
 
       const correlation = {
         orgId,
         window: { start, end, step },
         indicators: {
           infrastructure: { cpu, mem, disk },
-          business: { success },
+          application: { kafkaLag, cassandraReadP95, redisHitRate },
+          business: { success, processing },
         },
+        errors: { patterns },
+        severity,
+        confidence,
+        tracesSummary,
         // Placeholder: simple heuristic
         findings: [
           { at: end - 120, type: 'infrastructure', message: 'Resource pressure rising' },
@@ -46,4 +75,3 @@ export function timelineRoutes(router: Router) {
     } catch (e) { next(e); }
   });
 }
-

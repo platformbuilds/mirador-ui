@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom';
+import TimelinePage from './pages/Timeline';
 import type { Dashboard, PrometheusVectorResult } from '@mirador/shared';
 import './styles.css';
 
@@ -135,6 +136,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/login" element={<Login />} />
           <Route path="/dashboards" element={<Dashboards />} />
           <Route path="/metrics" element={<MetricsDemo />} />
+          <Route path="/timeline" element={<TimelinePage />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

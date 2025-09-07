@@ -20,3 +20,12 @@ export function authRequired(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+export function requireRole(role: string) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const user = (req as any).user as any;
+    if (!user) return res.status(401).json({ error: 'Unauthorized' });
+    const roles: string[] = ([] as string[]).concat((user.role as any) || []);
+    if (roles.includes(role)) return next();
+    return res.status(403).json({ error: 'Forbidden' });
+  };
+}

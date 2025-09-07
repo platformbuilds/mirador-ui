@@ -20,6 +20,9 @@ jobs:
       - name: Lint
         run: npx eslint "packages/**/*.{ts,tsx}" || true
         working-directory: public/mirador-ui
+      - name: Audit (dependencies)
+        run: npm audit --omit=dev || true
+        working-directory: public/mirador-ui
       - name: Build
         run: npm run build
         working-directory: public/mirador-ui
@@ -29,4 +32,3 @@ jobs:
       - name: Test Frontend
         run: npm -w @mirador/frontend run test -- --run
         working-directory: public/mirador-ui
-

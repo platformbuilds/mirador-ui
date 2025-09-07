@@ -1,10 +1,9 @@
 import type { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../db/prisma.js';
 import { z } from 'zod';
 import { validate } from '../middleware/validate.js';
-import { authRequired } from '../middleware/auth.js';
+import { authRequired, requireRole } from '../middleware/auth.js';
 
-const prisma = new PrismaClient();
 
 const createSchema = z.object({
   body: z.object({ name: z.string().min(1), config: z.any() })
@@ -20,7 +19,7 @@ export function dashboardRoutes(router: Router) {
     res.json(items);
   });
 
-  router.post('/dashboards', authRequired, validate(createSchema), async (req, res) => {
+  router.post('/dashboards', authRequired, requireRole('admin'), validate(createSchema), async (req, res) => {
     const { name, config } = req.body as any;
     const ownerEmail = (req as any).user?.sub as string | undefined;
     const owner = ownerEmail
@@ -40,16 +39,15 @@ export function dashboardRoutes(router: Router) {
     res.json(item);
   });
 
-  router.put('/dashboards/:id', authRequired, validate(updateSchema), async (req, res) => {
+  router.put('/dashboards/:id', authRequired, requireRole('admin'), validate(updateSchema), async (req, res) => {
     const { id } = req.params as any;
     const item = await prisma.dashboard.update({ where: { id }, data: req.body });
     res.json(item);
   });
 
-  router.delete('/dashboards/:id', authRequired, async (req, res) => {
+  router.delete('/dashboards/:id', authRequired, requireRole('admin'), async (req, res) => {
     const { id } = req.params as any;
     await prisma.dashboard.delete({ where: { id } });
     res.status(204).end();
   });
 }
-

@@ -1,0 +1,30 @@
+backend:
+  image: "ghcr.io/yourorg/mirador-backend:0.1.0"
+  replicas: 3
+  resources:
+    requests:
+      cpu: "500m"
+      memory: "512Mi"
+    limits:
+      cpu: "1000m"
+      memory: "1Gi"
+  env:
+    - name: NODE_ENV
+      value: production
+    - name: CORS_ORIGIN
+      value: "https://your.domain"
+frontend:
+  image: "ghcr.io/yourorg/mirador-frontend:0.1.0"
+  replicas: 3
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+ingress:
+  enabled: true
+  className: "nginx"
+  host: "your.domain"
+

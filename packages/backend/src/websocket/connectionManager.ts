@@ -5,6 +5,11 @@ export function initSocket(server: HttpServer) {
   const io = new Server(server, {
     cors: { origin: process.env.CORS_ORIGIN || '*' },
     path: '/ws',
+    perMessageDeflate: {
+      threshold: 1024,
+    },
+    pingInterval: 20000,
+    pingTimeout: 20000,
   });
 
   io.on('connection', (socket) => {

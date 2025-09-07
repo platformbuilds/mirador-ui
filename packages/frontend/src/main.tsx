@@ -1,13 +1,21 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Link, Route, Routes, useNavigate } from 'react-router-dom';
-import BuilderPage from './pages/Builder';
-import TimelinePage from './pages/Timeline';
+import { BrowserRouter, Link, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+const TimelinePage = React.lazy(() => import('./pages/Timeline'));
+const BuilderPage = React.lazy(() => import('./pages/Builder'));
 import type { Dashboard, PrometheusVectorResult } from '@mirador/shared';
 import './styles.css';
 
 const qc = new QueryClient();
+
+function AnalyticsTracker() {
+  const loc = useLocation();
+  React.useEffect(() => {
+    fetch('/api/analytics/pageview', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: loc.pathname }) }).catch(() => {});
+  }, [loc.pathname]);
+  return null;
+}
 
 function Home() {
   return (
@@ -141,6 +149,8 @@ createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={qc}>
       <BrowserRouter>
+        <AnalyticsTracker />
+        <React.Suspense fallback={<div className="container">Loading…</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/health" element={<Health />} />
@@ -150,6 +160,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/timeline" element={<TimelinePage />} />
           <Route path="/builder/:id" element={<BuilderPage />} />
         </Routes>
+        </React.Suspense>
       </BrowserRouter>
     </QueryClientProvider>
   </React.StrictMode>

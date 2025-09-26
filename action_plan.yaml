@@ -1,0 +1,46 @@
+plan:
+  - id: analyze_backend_proxy
+    title: Analyze backend mirador proxy integration
+    objectives:
+      - Inspect current mirador route handlers under packages/backend/src/routes for HTTP method usage, query params, and auth propagation.
+      - Catalogue dependencies on legacy GET endpoints (`/api/mirador/query`, `/api/mirador/query_range`, logs placeholders) to understand surface area of required updates.
+      - Confirm configuration sources for MIRADOR_CORE base URL, tenant handling, and bearer tokens so new headers/payload fields can be injected consistently.
+    deliverables:
+      - Annotated notes on required endpoint migrations and any missing env/config plumbing.
+    status: pending
+  - id: implement_backend_updates
+    title: Update backend proxies to new mirador-core contracts
+    objectives:
+      - Replace legacy GET passthroughs with POST calls to `/api/v1/metrics/query` and `/metrics/query_range`, serializing request bodies with `query`, `query_language`, `start`, `end`, and `step` fields.
+      - Introduce handlers for logs (`/logs/query`, `/logs/histogram`, `/logs/facets`, `/logs/export`, `/logs/tail`) and traces (`/traces/search`, `/traces/{id}`) ensuring tenantId and bearer token propagation.
+      - Implement safe defaults and validation (e.g., reject missing query strings, enforce limit caps) and align error handling with existing middleware.
+    deliverables:
+      - Updated route/controller/service modules with tests or integration stubs where practical.
+    status: pending
+  - id: update_shared_types
+    title: Expand shared TypeScript contracts
+    objectives:
+      - Add request/response typings for metrics, logs, traces, and schema operations reflecting the new JSON structures.
+      - Export DTOs for use across backend validation, frontend data fetching, and potential schemas.
+      - Ensure TypeScript project references build cleanly after type additions.
+    deliverables:
+      - Revised `packages/shared` sources plus regenerated build output if required.
+    status: pending
+  - id: refactor_frontend_calls
+    title: Align frontend data fetching with new APIs
+    objectives:
+      - Adjust helper functions in `packages/frontend` to issue POST requests with JSON bodies and configurable `query_language`.
+      - Update dashboard widgets (e.g., `MiniLineChart`, `StatWidget`, timeline components) and metrics demo to consume the new response shapes and handle loading/error states.
+      - Plan UX for logs/traces features or hide unsupported UI until backend endpoints are wired.
+    deliverables:
+      - Updated React components/hooks with accompanying unit tests or storybook notes when feasible.
+    status: pending
+  - id: validation_and_docs
+    title: Validate changes and communicate contract updates
+    objectives:
+      - Run lint, typecheck, backend/frontend unit tests, and targeted manual smoke tests (metrics query, dashboard builder save) to confirm end-to-end behavior.
+      - Document environment variable expectations, new endpoints, and client usage patterns in README or docs.
+      - Capture follow-up tasks (e.g., advanced search UX, CSV export flow) for future iterations.
+    deliverables:
+      - Test results summary and updated documentation entries (docs/ or README).
+    status: pending

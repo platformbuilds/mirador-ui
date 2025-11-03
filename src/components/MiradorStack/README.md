@@ -36,14 +36,10 @@ src/components/MiradorStack/
 
 ```typescript
 // Import individual widgets
-import { 
-  MiradorMetricsChart,
-  MiradorServiceStatus,
-  MiradorAlertDashboard 
-} from '@/components/MiradorStack/widgets';
+import { MiradorMetricsChart, MiradorServiceStatus, MiradorAlertDashboard } from "@/components/MiradorStack/widgets";
 
 // Import composables
-import { useMiradorStackWidget } from '@/components/MiradorStack/composables/useMiradorStackWidget';
+import { useMiradorStackWidget } from "@/components/MiradorStack/composables/useMiradorStackWidget";
 ```
 
 ### 2. Use Pre-built Widgets
@@ -78,26 +74,26 @@ import { useMiradorStackWidget } from '@/components/MiradorStack/composables/use
 </template>
 
 <script setup lang="ts">
-const cpuQueries = [
-  {
-    id: 'cpu-usage',
-    name: 'CPU Usage',
-    type: 'metrics' as const,
-    query: 'cpu_usage_percent',
-    datasource: 'mirador-core',
-    interval: '1m',
-  }
-];
+  const cpuQueries = [
+    {
+      id: "cpu-usage",
+      name: "CPU Usage",
+      type: "metrics" as const,
+      query: "cpu_usage_percent",
+      datasource: "mirador-core",
+      interval: "1m",
+    },
+  ];
 
-const chartConfig = {
-  chartType: 'line' as const,
-  showLegend: true,
-  unit: '%',
-  thresholds: [
-    { value: 80, color: '#faad14', label: 'Warning' },
-    { value: 90, color: '#f5222d', label: 'Critical' },
-  ],
-};
+  const chartConfig = {
+    chartType: "line" as const,
+    showLegend: true,
+    unit: "%",
+    thresholds: [
+      { value: 80, color: "#faad14", label: "Warning" },
+      { value: 90, color: "#f5222d", label: "Critical" },
+    ],
+  };
 </script>
 ```
 
@@ -108,11 +104,11 @@ const chartConfig = {
 Use the built-in scaffold generator to create new widgets:
 
 ```typescript
-import { MiradorStackDevTools } from '@/components/MiradorStack';
+import { MiradorStackDevTools } from "@/components/MiradorStack";
 
-const scaffold = MiradorStackDevTools.generateWidgetScaffold('CustomWidget');
+const scaffold = MiradorStackDevTools.generateWidgetScaffold("CustomWidget");
 console.log(scaffold.template); // Complete Vue component template
-console.log(scaffold.usage);    // Usage examples
+console.log(scaffold.usage); // Usage examples
 ```
 
 ### 2. Manual Widget Creation
@@ -142,37 +138,37 @@ Create a custom widget by extending `MiradorBaseWidget`:
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import MiradorBaseWidget from './MiradorBaseWidget.vue';
-import { useMiradorStackWidget } from '../composables/useMiradorStackWidget';
+  import { ref, onMounted } from "vue";
+  import MiradorBaseWidget from "./MiradorBaseWidget.vue";
+  import { useMiradorStackWidget } from "../composables/useMiradorStackWidget";
 
-const props = defineProps<{
-  title: string;
-  config: any;
-  width: number;
-  height: number;
-}>();
+  const props = defineProps<{
+    title: string;
+    config: any;
+    width: number;
+    height: number;
+  }>();
 
-const { formatNumber, getStatusColor } = useMiradorStackWidget();
+  const { formatNumber, getStatusColor } = useMiradorStackWidget();
 
-const loading = ref(false);
-const error = ref('');
-const widgetData = ref({});
+  const loading = ref(false);
+  const error = ref("");
+  const widgetData = ref({});
 
-const handleRefresh = async () => {
-  loading.value = true;
-  try {
-    // Implement your data fetching logic
-    const response = await fetch('/api/v1/custom-data');
-    widgetData.value = await response.json();
-  } catch (err) {
-    error.value = 'Failed to load data';
-  } finally {
-    loading.value = false;
-  }
-};
+  const handleRefresh = async () => {
+    loading.value = true;
+    try {
+      // Implement your data fetching logic
+      const response = await fetch("/api/v1/custom-data");
+      widgetData.value = await response.json();
+    } catch (err) {
+      error.value = "Failed to load data";
+    } finally {
+      loading.value = false;
+    }
+  };
 
-onMounted(handleRefresh);
+  onMounted(handleRefresh);
 </script>
 ```
 
@@ -182,7 +178,7 @@ onMounted(handleRefresh);
 
 ```typescript
 interface MetricsChartConfig {
-  chartType: 'line' | 'area' | 'bar';
+  chartType: "line" | "area" | "bar";
   colors?: string[];
   showLegend?: boolean;
   showGrid?: boolean;
@@ -205,7 +201,7 @@ interface ServiceStatusConfig {
   maxServices?: number;
   showMetrics?: boolean;
   statusFilter?: string[];
-  sortBy?: 'name' | 'status' | 'requestRate' | 'errorRate';
+  sortBy?: "name" | "status" | "requestRate" | "errorRate";
 }
 ```
 
@@ -216,7 +212,7 @@ interface AlertDashboardConfig {
   maxAlerts?: number;
   showResolved?: boolean;
   autoRefresh?: boolean;
-  sortBy?: 'timestamp' | 'severity' | 'source';
+  sortBy?: "timestamp" | "severity" | "source";
 }
 ```
 
@@ -225,23 +221,23 @@ interface AlertDashboardConfig {
 ### Using the API Composable
 
 ```typescript
-import { useMiradorStackAPI } from '@/components/MiradorStack/composables/useMiradorStackAPI';
+import { useMiradorStackAPI } from "@/components/MiradorStack/composables/useMiradorStackAPI";
 
 const { data, loading, error, refresh } = useMiradorStackAPI({
   queries: [
     {
-      id: 'metrics-query',
-      name: 'CPU Metrics',
-      type: 'metrics',
-      query: 'cpu_usage_percent',
-      datasource: 'mirador-core',
-    }
+      id: "metrics-query",
+      name: "CPU Metrics",
+      type: "metrics",
+      query: "cpu_usage_percent",
+      datasource: "mirador-core",
+    },
   ],
   autoRefresh: true,
   refreshInterval: 30, // seconds
   timeRange: {
-    from: '-1h',
-    to: 'now',
+    from: "-1h",
+    to: "now",
   },
 });
 ```
@@ -288,36 +284,40 @@ Override widget styles using scoped CSS:
 
 ```vue
 <style lang="scss" scoped>
-.custom-widget-content {
-  padding: 16px;
-  background: var(--background-color);
-  
-  .custom-element {
-    color: var(--primary-color);
-    border: 1px solid var(--border-color);
+  .custom-widget-content {
+    padding: 16px;
+    background: var(--background-color);
+
+    .custom-element {
+      color: var(--primary-color);
+      border: 1px solid var(--border-color);
+    }
   }
-}
 </style>
 ```
 
 ## 📊 Available Widgets
 
 ### 1. MiradorMetricsChart
+
 - **Purpose**: Display time-series metrics data
 - **Features**: Line, area, bar charts with thresholds
 - **Use Cases**: CPU usage, memory usage, request rates
 
-### 2. MiradorServiceStatus  
+### 2. MiradorServiceStatus
+
 - **Purpose**: Monitor service health and performance
 - **Features**: Service grid, metrics display, status indicators
 - **Use Cases**: Microservice monitoring, health dashboards
 
 ### 3. MiradorAlertDashboard
+
 - **Purpose**: Manage alerts and notifications
 - **Features**: Alert filtering, severity management, actions
 - **Use Cases**: Incident management, alert triage
 
 ### 4. MiradorBaseWidget
+
 - **Purpose**: Foundation for custom widgets
 - **Features**: Loading states, error handling, responsive design
 - **Use Cases**: Building new custom widgets
@@ -327,10 +327,10 @@ Override widget styles using scoped CSS:
 ### Widget Scaffold Generator
 
 ```typescript
-import { MiradorStackDevTools } from '@/components/MiradorStack';
+import { MiradorStackDevTools } from "@/components/MiradorStack";
 
 // Generate a new widget scaffold
-const scaffold = MiradorStackDevTools.generateWidgetScaffold('NetworkMonitor');
+const scaffold = MiradorStackDevTools.generateWidgetScaffold("NetworkMonitor");
 
 // scaffold includes:
 // - Complete Vue component template
@@ -344,9 +344,9 @@ const scaffold = MiradorStackDevTools.generateWidgetScaffold('NetworkMonitor');
 ```typescript
 const devSetup = MiradorStackDevTools.createWidgetDevelopmentSetup();
 
-console.log(devSetup.sampleQueries);    // Sample API queries
-console.log(devSetup.sampleConfig);     // Sample widget config
-console.log(devSetup.developmentTips);  // Development best practices
+console.log(devSetup.sampleQueries); // Sample API queries
+console.log(devSetup.sampleConfig); // Sample widget config
+console.log(devSetup.developmentTips); // Development best practices
 ```
 
 ## 🚀 Integration with Existing Dashboard
@@ -357,8 +357,8 @@ Add widgets to the existing SkyWalking dashboard system:
 
 ```typescript
 // In src/views/dashboard/configuration/widget/graph-styles/index.ts
-import MiradorMetricsChart from '@/components/MiradorStack/widgets/MiradorMetricsChart.vue';
-import MiradorServiceStatus from '@/components/MiradorStack/widgets/MiradorServiceStatus.vue';
+import MiradorMetricsChart from "@/components/MiradorStack/widgets/MiradorMetricsChart.vue";
+import MiradorServiceStatus from "@/components/MiradorStack/widgets/MiradorServiceStatus.vue";
 
 export default {
   // ... existing configs
@@ -373,7 +373,7 @@ Update the dashboard types:
 
 ```typescript
 // In src/types/dashboard.ts
-export type GraphConfig = 
+export type GraphConfig =
   | BarConfig
   | LineConfig
   // ... existing types
@@ -409,24 +409,28 @@ Add MiradorStack widgets to the widget picker:
 ## 📝 Best Practices
 
 ### 1. Widget Development
+
 - Always extend `MiradorBaseWidget` for consistency
 - Implement proper error handling and loading states
 - Use TypeScript for type safety
 - Follow the established naming convention: `Mirador[WidgetName]`
 
 ### 2. Performance
+
 - Use `v-memo` for expensive computations
 - Implement virtual scrolling for large data sets
 - Debounce API calls and user interactions
 - Use `shallowRef` for large objects
 
 ### 3. Accessibility
+
 - Add proper ARIA labels and roles
 - Implement keyboard navigation
 - Ensure color contrast compliance
 - Provide alternative text for visual elements
 
 ### 4. Testing
+
 - Write unit tests for widget logic
 - Test with various data scenarios
 - Validate responsive behavior
@@ -437,11 +441,13 @@ Add MiradorStack widgets to the widget picker:
 ### Common Issues
 
 1. **Widget not displaying data**
+
    - Check API endpoint configuration
    - Verify data format matches expected types
    - Check network requests in browser dev tools
 
 2. **Styling issues**
+
    - Ensure CSS variables are properly defined
    - Check for conflicting styles
    - Verify responsive breakpoints

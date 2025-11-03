@@ -28,10 +28,19 @@
   --sw-green: #70c877;
   --sw-orange: #e6a23c;
   --sw-topo-animation: topo-dash 0.3s linear infinite;
+
+  /* MiradorStack Brand Colors */
+  --mirador-primary: #2563eb;
+  --mirador-secondary: #0f172a;
+  --mirador-accent: #f59e0b;
+  --mirador-success: #10b981;
+  --mirador-warning: #f59e0b;
+  --mirador-error: #ef4444;
+  --mirador-info: #3b82f6;
 }
 
 html {
-  --el-color-primary: #409eff;
+  --el-color-primary: var(--mirador-primary);
   --el-color-info-light-9: #666;
   --theme-background: #fff;
   --font-color: #3d444f;

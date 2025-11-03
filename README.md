@@ -1,40 +1,85 @@
-# Apache SkyWalking Booster UI
+# MiradorStack UI
 
-<img src="http://skywalking.apache.org/assets/logo.svg" alt="Sky Walking logo" height="90px" align="right" />
+<div align="center">
+  <img src="./src/assets/logo.svg" alt="MiradorStack UI" height="90px" />
+  
+  **Modern Observability Dashboard for MiradorStack Platform**
+</div>
 
-[Apache SkyWalking](https://github.com/apache/skywalking) Booster UI.
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)](package.json)
+[![Vue](https://img.shields.io/badge/vue-3.x-brightgreen.svg)](package.json)
 
-![NPM BUILD](https://github.com/apache/skywalking-booster-ui/workflows/Node%20CI/badge.svg)
+## About
 
-This UI starts from SkyWalking OAP v9 core.
+MiradorStack UI is a modern, responsive observability dashboard built on Vue 3 and TypeScript. It provides comprehensive visualization and analysis capabilities for metrics, logs, traces, and system monitoring data from the MiradorStack platform.
 
-## Release
+**This project is derived from [Apache SkyWalking Booster UI](https://github.com/apache/skywalking-booster-ui) and maintains Apache 2.0 licensing with proper attribution.**
 
-This repo wouldn't release separately. All source codes have been included in the main repo release. The tags match the [main repo](https://github.com/apache/skywalking) tags.
+## Features
 
-## Development
+- 📊 **Interactive Dashboards** - Customizable widgets and real-time data visualization
+- 🔍 **Observability** - Metrics, logs, and distributed tracing analysis  
+- 🎨 **Modern UI** - Built with Vue 3, TypeScript, and Element Plus
+- 📱 **Responsive Design** - Works seamlessly on desktop and mobile
+- 🌐 **Internationalization** - Multi-language support
+- ⚡ **High Performance** - Optimized with Vite build system
+- 🔧 **Extensible** - Plugin architecture for custom widgets
 
-The app was built with [Vue3.x + Typescript](https://github.com/vuejs/vue).
+## Quick Start
 
-### Prepare
+### Prerequisites
 
-1. Fork, then clone the repo and change directory into it.
-1. Install dependencies via `npm`:
+- Node.js >= 18.0.0
+- npm >= 8.0.0
+- MiradorStack Core backend running
 
-```
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/platformbuilds/miradorstack-ui.git
+cd miradorstack-ui
+
+# Install dependencies
 npm install
-```
 
-### Build
+# Configure backend connection
+echo "VITE_MIRADOR_CORE_URL=http://localhost:8080" > .env.local
 
-**All following builds are for dev.**
-
-```
-npm install
+# Start development server
 npm run dev
 ```
 
-The default UI address is `http://localhost:3000`.
+The application will be available at `http://localhost:3000`.
+
+## Development
+
+Built with modern technologies:
+
+- **Vue 3.x** - Progressive JavaScript framework
+- **TypeScript** - Static typing for enhanced development
+- **Vite** - Fast build tool and dev server
+- **Element Plus** - Vue 3 UI component library
+
+### Development Commands
+
+```bash
+# Development server with hot reload
+npm run dev
+
+# Type checking
+npm run type-check
+
+# Linting and code formatting
+npm run lint
+
+# Unit tests
+npm run test:unit
+
+# Build for production
+npm run build
+```
 
 # Contact Us
 

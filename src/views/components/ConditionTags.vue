@@ -40,10 +40,7 @@ limitations under the License. -->
       </div>
     </el-popover>
     <span class="tags-tip" :class="tagArr.length ? 'link-tips' : ''">
-      <a
-        target="blank"
-        href="https://github.com/apache/skywalking/blob/master/docs/en/setup/backend/configuration-vocabulary.md"
-      >
+      <a target="blank" href="https://docs.miradorstack.com/configuration-vocabulary/">
         {{ t("tagsLink") }}
       </a>
       <el-tooltip :content="t((tipsMap as any)[type])">

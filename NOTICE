@@ -1,0 +1,19 @@
+MiradorStack UI
+Copyright 2024 PlatformBuilds Global Private Limited
+
+This project is a derivative work based on Apache SkyWalking Booster UI:
+
+Original work:
+- Apache SkyWalking Booster UI
+- Copyright 2017-2024 The Apache Software Foundation
+- Licensed under the Apache License, Version 2.0
+- Source: https://github.com/apache/skywalking-booster-ui
+
+Modifications:
+- Adapted for MiradorStack observability platform
+- Modified API integration from GraphQL to REST
+- Updated branding and user interface elements
+- Added MiradorStack-specific features and configurations
+
+Both the original work and modifications are licensed under the Apache License, Version 2.0.
+See LICENSE file for full license text.

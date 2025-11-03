@@ -126,9 +126,9 @@ limitations under the License. -->
     traceStore.setCurrentTrace(i);
     selectedKey.value = i.key;
     if (i.traceIds.length) {
-      const res = await traceStore.getTraceSpans({
+      const res = (await traceStore.getTraceSpans({
         traceId: i.traceIds[0].value,
-      });
+      })) as any;
       if (res.errors) {
         ElMessage.error(res.errors);
       }
@@ -136,7 +136,7 @@ limitations under the License. -->
   }
 
   async function queryTraces() {
-    const res = await traceStore.getTraces();
+    const res = (await traceStore.getTraces()) as any;
     if (res.errors) {
       ElMessage.error(res.errors);
     }

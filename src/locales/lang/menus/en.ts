@@ -18,9 +18,9 @@ const titles = {
   // General Service
   general_service: "General Service",
   general_service_desc:
-    "Observe services and relative direct dependencies through telemetry data collected from SkyWalking Agents.",
+    "Observe services and relative direct dependencies through telemetry data collected from MiradorStack Agents.",
   general_service_services: "Services",
-  general_service_services_desc: "Observe services through telemetry data collected from SkyWalking Agent.",
+  general_service_services_desc: "Observe services through telemetry data collected from MiradorStack Agent.",
   general_service_virtual_database: "Visual Database",
   general_service_virtual_database_desc:
     "Observe the virtual databases which are conjectured by language agents through various plugins.",
@@ -75,7 +75,7 @@ const titles = {
   aws_cloud_api_gateway_desc: "Provide AWS Cloud API Gateway monitoring through AWS FireHose Receiver.",
   // Browser
   browser: "Browser",
-  browser_desc: "Provide Browser-Side monitoring of Web-App, Versions and Pages, through Apache SkyWalking Client JS.",
+  browser_desc: "Provide Browser-Side monitoring of Web-App, Versions and Pages, through MiradorStack Client JS.",
   // Gateway
   gateway: "Gateway",
   gateway_desc:
@@ -118,8 +118,8 @@ const titles = {
   // self observability
   self_observability: "Self Observability",
   self_observability_desc:
-    "Self Observability provides the observabilities for running components and servers from the SkyWalking ecosystem.",
-  self_observability_oap: "SkyWalking Server",
+    "Self Observability provides the observabilities for running components and servers from the MiradorStack ecosystem.",
+  self_observability_oap: "MiradorStack Server",
   self_observability_oap_desc:
     "The OAP backend cluster itself is a distributed streaming process system, this is the monitoring for the OAP backend itself.",
   self_observability_satellite: "Satellite",
@@ -127,12 +127,12 @@ const titles = {
     "Satellite: an open-source agent designed for the cloud-native infrastructures, which provides a low-cost, high-efficient, and more secure way to collect telemetry data. It is the recommended load balancer for telemetry collecting.",
   self_observability_banyandb: "BanyanDB Server",
   self_observability_banyandb_desc: "Provide BanyanDB monitoring through OpenTelemetry's Prometheus Receiver",
-  self_observability_java_agent: "SkyWalking Java Agent",
+  self_observability_java_agent: "MiradorStack Java Agent",
   self_observability_java_agent_desc:
-    "The self observability of SkyWalking Java Agent, which provides the abilities to measure the tracing performance and error statistics of plugins.",
-  self_observability_go_agent: "SkyWalking Go Agent",
+    "The self observability of MiradorStack Java Agent, which provides the abilities to measure the tracing performance and error statistics of plugins.",
+  self_observability_go_agent: "MiradorStack Go Agent",
   self_observability_go_agent_desc:
-    "The self observability of SkyWalking Go Agent, which provides the abilities to measure the tracing performance and error statistics of plugins.",
+    "The self observability of MiradorStack Go Agent, which provides the abilities to measure the tracing performance and error statistics of plugins.",
   cilium: "Cilium",
   cilium_desc:
     "Cilium is a CNI plugin for Kubernetes that provides eBPF-based networking, security, and load balancing.",

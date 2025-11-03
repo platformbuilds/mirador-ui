@@ -21,11 +21,7 @@ export enum TimeType {
   DAY_TIME = "DAY",
 }
 
-export const Languages = [
-  { label: "English", value: "en" },
-  { label: "Chinese", value: "zh" },
-  { label: "Spanish", value: "es" },
-];
+export const Languages = [{ label: "English", value: "en" }];
 
 export enum Themes {
   Dark = "dark",

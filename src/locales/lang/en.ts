@@ -301,7 +301,7 @@ const msg = {
   viewLogs: "View Logs",
   logsTagsTip: `Only tags defined in the core/default/searchableLogsTags are searchable.
   Check more details on the Configuration Vocabulary page`,
-  keywordsOfContentLogTips: "Current storage of SkyWalking OAP server does not support this",
+  keywordsOfContentLogTips: "Current storage configuration does not support this",
   setEvent: "Set Event",
   viewAttributes: "View",
   attributes: "Attributes",

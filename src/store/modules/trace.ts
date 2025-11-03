@@ -19,6 +19,8 @@ import type { Instance, Endpoint, Service } from "@/types/selector";
 import type { Trace, Span, TraceCondition } from "@/types/trace";
 import { store } from "@/store";
 import graphql from "@/graphql";
+import fetchQuery from "@/graphql/http";
+import { TracesAPI } from "@/api/traces";
 import { useAppStoreWithOut } from "@/store/modules/app";
 import { useSelectorStore } from "@/store/modules/selectors";
 import { QueryOrders } from "@/views/dashboard/data";
@@ -181,27 +183,68 @@ export const traceStore = defineStore({
         return this.fetchV2Traces();
       }
       this.loading = true;
-      const response = await graphql.query("queryTraces").params({ condition: this.conditions });
-      if (response.errors) {
-        this.loading = false;
-        return response;
+
+      // Map conditions to TracesAPI parameters
+      const params: any = {
+        limit: this.conditions.paging?.pageSize || PageSize,
+        offset: ((this.conditions.paging?.pageNum || 1) - 1) * (this.conditions.paging?.pageSize || PageSize),
+      };
+
+      // Add duration range if available
+      if (this.conditions.queryDuration) {
+        params.startTime = this.conditions.queryDuration.start;
+        params.endTime = this.conditions.queryDuration.end;
       }
-      if (!response.data.data.traces.length) {
-        this.traceList = [];
-        this.setCurrentTrace({});
-        this.setTraceSpans([]);
-        this.loading = false;
-        return response;
+
+      // Add service filter if selected
+      if (this.selectorStore.currentService?.id && this.selectorStore.currentService.id !== "0") {
+        params.serviceName = this.selectorStore.currentService.label;
       }
-      this.getTraceSpans({ traceId: response.data.data.traces[0].traceIds[0] });
-      this.traceList = response.data.data.traces.map((d: Trace) => {
-        d.traceIds = d.traceIds.map((id: string) => {
-          return { value: id, label: id };
-        });
-        return d;
-      });
-      this.setCurrentTrace(response.data.data.traces[0] || {});
-      return response;
+
+      // Add trace state filter (error traces)
+      if (this.conditions.traceState === "ERROR") {
+        params.tags = { error: "true" };
+      }
+
+      try {
+        const response = (await TracesAPI.search(params)) as { status: string; data: any[]; metadata?: any };
+
+        if (!response.data || response.data.length === 0) {
+          this.traceList = [];
+          this.setCurrentTrace(null);
+          this.setTraceSpans([]);
+          this.loading = false;
+          return { data: { data: { traces: [] } } };
+        }
+
+        // Transform response to match expected GraphQL format
+        const traces = response.data.map((trace: any) => ({
+          traceIds: [{ value: trace.traceId, label: trace.traceId }],
+          start: trace.startTime,
+          duration: trace.duration,
+          isError: trace.error,
+          spans: [], // Will be populated when getting trace details
+          traceId: trace.traceId,
+          key: trace.traceId,
+          serviceCode: trace.rootService,
+          endpointNames: [trace.rootOperation],
+          label: `${trace.rootService}: ${trace.rootOperation}`,
+        }));
+
+        this.traceList = traces;
+        this.setCurrentTrace(traces[0] || null);
+
+        // Get spans for the first trace
+        if (traces[0]?.traceId) {
+          this.getTraceSpans({ traceId: traces[0].traceId });
+        }
+
+        this.loading = false;
+        return { data: { data: { traces } } };
+      } catch (error) {
+        this.loading = false;
+        return { errors: error };
+      }
     },
     async getTraceSpans(params: { traceId: string }) {
       if (this.hasQueryTracesV2Support) {
@@ -209,23 +252,41 @@ export const traceStore = defineStore({
         return new Promise((resolve) => resolve({}));
       }
       const appStore = useAppStoreWithOut();
-      let response;
       this.loading = true;
-      if (appStore.coldStageMode) {
-        response = await graphql
-          .query("queryTraceSpansFromColdStage")
-          .params({ ...params, duration: this.conditions.queryDuration });
-      } else {
-        response = await graphql.query("querySpans").params(params);
+
+      try {
+        const response = (await TracesAPI.getById(params.traceId)) as { status: string; data: any };
+
+        if (response.status !== "success" || !response.data) {
+          this.loading = false;
+          return { errors: "Failed to fetch trace spans" };
+        }
+
+        const traceData = response.data;
+        const spans = traceData.spans || [];
+
+        // Transform spans to match expected format
+        const transformedSpans = spans.map((span: any) => ({
+          ...span,
+          serviceCode: span.serviceName,
+          endpointName: span.operationName,
+          startTime: span.startTime,
+          endTime: span.endTime,
+          isError: span.error,
+          tags: span.tags || {},
+          logs: span.logs || [],
+          refs: span.references || [],
+        }));
+
+        this.serviceList = Array.from(new Set(transformedSpans.map((i: any) => i.serviceCode)));
+        this.setTraceSpans(transformedSpans);
+        this.loading = false;
+
+        return { data: { trace: { spans: transformedSpans } } };
+      } catch (error) {
+        this.loading = false;
+        return { errors: error };
       }
-      this.loading = false;
-      if (response.errors) {
-        return response;
-      }
-      const data = response.data.trace.spans || [];
-      this.serviceList = Array.from(new Set(data.map((i: Span) => i.serviceCode)));
-      this.setTraceSpans(data);
-      return response;
     },
     async getSpanLogs(params: Recordable) {
       const response = await graphql.query("queryServiceLogs").params(params);
@@ -237,14 +298,21 @@ export const traceStore = defineStore({
       return response;
     },
     async getTagKeys() {
-      return await graphql.query("queryTraceTagKeys").params({ duration: useAppStoreWithOut().durationTime });
+      // TODO: Implement tag keys retrieval via REST API
+      // For now, return empty result as traces API may not support this directly
+      return { data: { traceTagKeys: [] } };
     },
     async getTagValues(tagKey: string) {
-      return await graphql.query("queryTraceTagValues").params({ tagKey, duration: useAppStoreWithOut().durationTime });
+      // TODO: Implement tag values retrieval via REST API
+      // For now, return empty result as traces API may not support this directly
+      return { data: { traceTagValues: [] } };
     },
     async getHasQueryTracesV2Support() {
-      const response = await graphql.query("queryHasQueryTracesV2Support").params({});
-      this.hasQueryTracesV2Support = response.data.hasQueryTracesV2Support;
+      const response = await fetchQuery({
+        method: "get",
+        path: "TraceSupport",
+      });
+      this.hasQueryTracesV2Support = response?.hasQueryTracesV2Support || false;
       return response;
     },
     async fetchV2Traces() {

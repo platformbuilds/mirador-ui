@@ -112,7 +112,7 @@ limitations under the License. -->
       async function changeTraceId(opt: Option[]) {
         traceId.value = opt[0].value;
         loading.value = true;
-        const res = await traceStore.getTraceSpans({ traceId: opt[0].value });
+        const res = (await traceStore.getTraceSpans({ traceId: opt[0].value })) as any;
         if (res.errors) {
           ElMessage.error(res.errors);
         }

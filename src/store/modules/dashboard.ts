@@ -18,7 +18,8 @@ import { defineStore } from "pinia";
 import { store } from "@/store";
 import type { LayoutConfig } from "@/types/dashboard";
 import graphql from "@/graphql";
-import customQuery from "@/graphql/custom-query";
+import fetchQuery from "@/graphql/http";
+import customQuery from "@/api/custom-query";
 import type { DashboardItem } from "@/types/dashboard";
 import { useSelectorStore } from "@/store/modules/selectors";
 import { NewControl, TextConfig, TimeRangeConfig, ControlsTypes } from "../data";
@@ -308,12 +309,15 @@ export const dashboardStore = defineStore({
       return await customQuery(param);
     },
     async fetchTemplates() {
-      const res = await graphql.query("getTemplates").params({});
+      const res = await fetchQuery({
+        method: "get",
+        path: "Templates",
+      });
 
       if (res.errors) {
         return res;
       }
-      const data = res.data.getAllTemplates;
+      const data = res.templates || res;
       let list = [];
       for (const t of data) {
         const c = JSON.parse(t.configuration);
@@ -337,7 +341,7 @@ export const dashboardStore = defineStore({
         return 0;
       });
       sessionStorage.setItem("dashboards", JSON.stringify(list));
-      return res.data;
+      return { getAllTemplates: data };
     },
     async setDashboards() {
       if (!sessionStorage.getItem("dashboards")) {

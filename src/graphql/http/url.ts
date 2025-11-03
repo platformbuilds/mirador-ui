@@ -19,4 +19,20 @@ export const HttpURL = {
   ClusterNodes: `${PREFIX}/status/cluster/nodes`,
   ConfigTTL: `${PREFIX}/status/config/ttl`,
   DebuggingConfigDump: `${PREFIX}/debugging/config/dump`,
+  // RCA (Root Cause Analysis) APIs - REST endpoints
+  RCAInvestigate: `${PREFIX}/v1/rca/investigate`,
+  RCACorrelations: `${PREFIX}/v1/rca/correlations`,
+  RCAServiceGraph: `${PREFIX}/v1/rca/service-graph`,
+  // Unified Query APIs - REST endpoints for correlation
+  UnifiedQuery: `${PREFIX}/v1/unified/query`,
+  UnifiedCorrelation: `${PREFIX}/v1/unified/correlation`,
+  UnifiedMetadata: `${PREFIX}/v1/unified/metadata`,
+  UnifiedHealth: `${PREFIX}/v1/unified/health`,
+  // TTL and configuration APIs
+  MetricsTTL: `${PREFIX}/status/config/ttl/metrics`,
+  RecordsTTL: `${PREFIX}/status/config/ttl/records`,
+  // Template/Dashboard APIs
+  Templates: `${PREFIX}/v1/templates`,
+  // Trace support check
+  TraceSupport: `${PREFIX}/status/capabilities/trace`,
 };

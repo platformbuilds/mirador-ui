@@ -15,7 +15,8 @@ limitations under the License. -->
 <template>
   <div class="side-bar" v-if="showMenu" @click="isCollapse = false" @mouseleave="closeMenu">
     <div :class="isCollapse ? 'logo-icon-collapse' : 'logo-icon'">
-      <Icon :size="isCollapse ? 'xl' : 'logo'" :iconName="isCollapse ? 'logo' : 'logo-sw'" />
+      <Icon :size="isCollapse ? 'xl' : 'logo'" :iconName="isCollapse ? 'miradorstack-logo' : 'miradorstack-logo'" />
+      <span v-if="!isCollapse" class="logo-text">MiradorStack</span>
     </div>
     <div class="menu scroll_bar_style" :style="isCollapse ? {} : { width: '220px' }">
       <el-menu
@@ -162,7 +163,17 @@ limitations under the License. -->
 
   .logo-icon {
     margin: 15px 0 10px 20px;
-    width: 110px;
+    width: 180px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
   }
 
   .menu-control.collapse {

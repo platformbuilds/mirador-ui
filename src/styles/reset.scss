@@ -20,7 +20,7 @@ body {
   line-height: 1.5;
   font-size: $font-size-normal;
   color: $font-color;
-  font-family: Helvetica, Arial, "Source Han Sans CN", "Microsoft YaHei", sans-serif;
+  font-family: var(--font-family-primary);
   text-rendering: optimizelegibility;
   text-size-adjust: 100%;
 }
@@ -61,7 +61,7 @@ textarea,
 select,
 button {
   font-size: 100%;
-  font-family: inherit;
+  font-family: var(--font-family-secondary);
 }
 
 h1 {
@@ -121,5 +121,5 @@ blockquote {
 
 code,
 pre {
-  font-family: Consolas, Menlo, Courier, monospace;
+  font-family: var(--font-family-mono);
 }

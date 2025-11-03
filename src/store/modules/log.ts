@@ -18,6 +18,7 @@ import { defineStore } from "pinia";
 import type { Instance, Endpoint, Service } from "@/types/selector";
 import { store } from "@/store";
 import graphql from "@/graphql";
+import { LogsAPI } from "@/api/logs";
 import { useAppStoreWithOut } from "@/store/modules/app";
 import { useSelectorStore } from "@/store/modules/selectors";
 import { useDashboardStore } from "@/store/modules/dashboard";
@@ -129,14 +130,37 @@ export const logStore = defineStore({
     },
     async getServiceLogs() {
       this.loadLogs = true;
-      const response = await graphql.query("queryServiceLogs").params({ condition: this.conditions });
-      this.loadLogs = false;
-      if (response.errors) {
-        return response;
-      }
+      try {
+        const duration = this.conditions.queryDuration;
+        const paging = this.conditions.paging || { pageNum: 1, pageSize: 15 };
 
-      this.logs = response.data.queryLogs.logs;
-      return response;
+        // Build query based on current service/instance selection
+        const selectorStore = useSelectorStore();
+        let query = "_time:5m"; // Default time range
+
+        if (selectorStore.currentService && selectorStore.currentService.value !== "0") {
+          query += ` AND serviceName:"${selectorStore.currentService.value}"`;
+        }
+
+        if (selectorStore.currentPod && selectorStore.currentPod.value !== "0") {
+          query += ` AND serviceInstanceName:"${selectorStore.currentPod.value}"`;
+        }
+
+        const response = (await LogsAPI.search({
+          query,
+          query_language: "lucene",
+          start: duration.start ? Math.floor(new Date(duration.start).getTime()) : undefined,
+          end: duration.end ? Math.floor(new Date(duration.end).getTime()) : undefined,
+          limit: paging.pageSize,
+        })) as any;
+
+        this.logs = response.data?.logs || [];
+        return { data: { queryLogs: { logs: this.logs } } };
+      } catch (error) {
+        return { errors: error instanceof Error ? error.message : "Failed to fetch logs" };
+      } finally {
+        this.loadLogs = false;
+      }
     },
     async getBrowserLogs() {
       this.loadLogs = true;
@@ -150,10 +174,21 @@ export const logStore = defineStore({
       return response;
     },
     async getLogTagKeys() {
-      return await graphql.query("queryLogTagKeys").params({ duration: useAppStoreWithOut().durationTime });
+      try {
+        const response = (await LogsAPI.getFields()) as any;
+        return { data: { tagKeys: response.data?.fields || [] } };
+      } catch (error) {
+        return { errors: error instanceof Error ? error.message : "Failed to fetch log fields" };
+      }
     },
     async getLogTagValues(tagKey: string) {
-      return await graphql.query("queryLogTagValues").params({ tagKey, duration: useAppStoreWithOut().durationTime });
+      try {
+        // For now, return empty array as the REST API doesn't have a direct equivalent
+        // This could be implemented by querying logs and extracting unique values for the tag
+        return { data: { tagValues: [] } };
+      } catch (error) {
+        return { errors: error instanceof Error ? error.message : "Failed to fetch tag values" };
+      }
     },
   },
 });

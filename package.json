@@ -1,10 +1,33 @@
 {
-  "name": "skywalking-booster-ui",
-  "version": "10.2.0",
-  "private": true,
+  "name": "miradorstack-ui",
+  "version": "1.0.0",
+  "description": "MiradorStack Observability Dashboard - Modern UI for metrics, logs, and traces monitoring",
+  "private": false,
+  "homepage": "https://github.com/platformbuilds/miradorstack-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/platformbuilds/miradorstack-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/platformbuilds/miradorstack-ui/issues"
+  },
+  "keywords": [
+    "miradorstack",
+    "observability",
+    "dashboard",
+    "monitoring",
+    "metrics",
+    "logs",
+    "traces",
+    "vue3",
+    "typescript",
+    "apache-skywalking-derivative"
+  ],
+  "author": "PlatformBuilds",
+  "license": "Apache-2.0",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
+    "build": "npm run type-check && npm run build-only",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
@@ -24,9 +47,16 @@
     "test:views": "vitest --environment jsdom src/views/**/*.spec.ts",
     "test:router": "vitest --environment jsdom src/router/**/*.spec.ts",
     "test:all": "vitest --environment jsdom --root src/ --coverage --reporter=verbose",
-    "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' :4173 'cypress open --e2e'"
+    "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' :4173 'cypress open --e2e'",
+    "docker:build": "./scripts/build-docker.sh",
+    "docker:dev": "./scripts/dev-setup.sh",
+    "docker:deploy": "./scripts/deploy.sh",
+    "docker:up": "docker-compose up -d miradorstack-ui",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f miradorstack-ui"
   },
   "dependencies": {
+    "chart.js": "^4.5.1",
     "d3": "^7.3.0",
     "d3-flame-graph": "^4.1.3",
     "d3-tip": "^0.9.1",

@@ -15,25 +15,23 @@
  * limitations under the License.
  */
 import { createI18n } from "vue-i18n";
-import zh from "./lang/zh";
 import en from "./lang/en";
-import es from "./lang/es";
 
 const messages = {
   en,
-  zh,
-  es,
 };
 
 const savedLanguage = window.localStorage.getItem("language");
-let language = navigator.language.split("-")[0];
-if (!savedLanguage) {
-  window.localStorage.setItem("language", language);
+let language = "en"; // Force English only
+if (savedLanguage && savedLanguage === "en") {
+  language = savedLanguage;
+} else {
+  window.localStorage.setItem("language", "en");
 }
-language = savedLanguage ? savedLanguage : language;
 const i18n = createI18n({
   legacy: false,
   locale: language,
+  fallbackLocale: "en",
   messages,
 });
 

@@ -255,9 +255,10 @@ export async function useDashboardQueryProcessor(configList: DashboardWidgetConf
       for (let i = 0; i < configArr.length; i++) {
         const resp: Record<string, ExecExpressionResponse> = {};
         for (let m = 0; m < configArr[i].metrics.length; m++) {
-          resp[`expression${i}${m}`] = json.data[`expression${i}${m}`] as ExecExpressionResponse;
+          const key = `expression${i}${m}`;
+          resp[key] = (json.data as Record<string, ExecExpressionResponse>)[key] as ExecExpressionResponse;
         }
-        const data = expressionsSource(configArr[i], { ...json, data: resp });
+        const data = expressionsSource(configArr[i], { errors: json.errors || "", data: resp });
         const id = configArr[i].id;
         pageData[id] = data;
       }

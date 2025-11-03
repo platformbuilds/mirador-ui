@@ -30,7 +30,7 @@ const OUTPUT_DIR = "dist";
 const pathSrc = path.resolve(__dirname, "./src");
 // https://vitejs.dev/config/
 export default ({ mode }: ConfigEnv): UserConfig => {
-  const { VITE_SW_PROXY_TARGET } = loadEnv(mode, process.cwd());
+  const { VITE_MIRADOR_CORE_URL } = loadEnv(mode, process.cwd());
   return {
     plugins: [
       vue(),
@@ -71,14 +71,15 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       host: true,
       port: 3000,
       proxy: {
-        "/graphql": {
-          target: `${VITE_SW_PROXY_TARGET || "http://127.0.0.1:12800"}`,
+        // Proxy MiradorStack API calls to backend
+        "/api/v1": {
+          target: `${VITE_MIRADOR_CORE_URL || "http://localhost:8080"}`,
           changeOrigin: true,
         },
-        "/api": {
-          target: `${VITE_SW_PROXY_TARGET || "http://127.0.0.1:12800"}`,
+        // Keep GraphQL support during migration
+        "/graphql": {
+          target: `${VITE_MIRADOR_CORE_URL || "http://localhost:8080"}`,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
     },

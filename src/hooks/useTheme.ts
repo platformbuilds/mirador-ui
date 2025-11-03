@@ -26,10 +26,10 @@ export function useTheme() {
   // Initialize theme from localStorage or system preference
   function initializeTheme() {
     const savedTheme = window.localStorage.getItem("theme-is-dark");
-    let isDark = true; // default to dark theme
+    let isDark = false; // default to light theme
 
-    if (savedTheme === "false") {
-      isDark = false;
+    if (savedTheme === "true") {
+      isDark = true;
     } else if (savedTheme === "") {
       // read the theme preference from system setting if there is no user setting
       isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;

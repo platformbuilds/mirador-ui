@@ -17,6 +17,7 @@
 import { defineStore } from "pinia";
 import { store } from "@/store";
 import graphql from "@/graphql";
+import fetchQuery from "@/graphql/http";
 import type { Duration, DurationTime } from "@/types/app";
 import getLocalTime from "@/utils/localtime";
 import dateFormatStep, { dateFormatTime } from "@/utils/dateFormat";
@@ -61,7 +62,7 @@ export const appStore = defineStore({
     isMobile: false,
     reloadTimer: null,
     allMenus: [],
-    theme: Themes.Dark,
+    theme: Themes.Light,
     coldStageMode: false,
     maxRange: [],
     metricsTTL: null,
@@ -204,20 +205,26 @@ export const appStore = defineStore({
       return res.data;
     },
     async queryMetricsTTL() {
-      const response = await graphql.query("queryMetricsTTL").params({});
+      const response = await fetchQuery({
+        method: "get",
+        path: "MetricsTTL",
+      });
       if (response.errors) {
         return response;
       }
-      this.metricsTTL = response.data.getMetricsTTL || {};
-      return response.data;
+      this.metricsTTL = response || {};
+      return response;
     },
     async queryRecordsTTL() {
-      const res = await graphql.query("queryRecordsTTL").params({});
-      if (res.errors) {
-        return res;
+      const response = await fetchQuery({
+        method: "get",
+        path: "RecordsTTL",
+      });
+      if (response.errors) {
+        return response;
       }
-      this.recordsTTL = res.data.getRecordsTTL || {};
-      return res.data;
+      this.recordsTTL = response || {};
+      return response;
     },
     setReloadTimer(timer: IntervalHandle) {
       this.reloadTimer = timer;

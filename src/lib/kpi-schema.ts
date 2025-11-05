@@ -12,8 +12,8 @@ const zMetric = z.object({
 const zFormula: z.ZodType<any> = z.lazy(() =>
   z.object({
     type: z.literal("formula"),
-    expr: z.string().regex(/^[0-9a-zA-Z_\s\.\+\-\*\/\(\)]+$/),
-    inputs: z.record(z.union([zMetric, zFormula])),
+    expr: z.string().regex(/^[0-9a-zA-Z_\s\.\+\-\*\/\(\)]+$/, "Invalid formula expression"),
+    inputs: z.record(z.string(), z.union([zMetric, zFormula])),
   })
 );
 

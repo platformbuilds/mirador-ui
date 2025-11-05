@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { ensureKpiDefsLoaded } from "./state/kpi-store";
 import Home from "./pages/Home";
 import KpiBuilder from "./pages/KpiBuilder";
 import Chat from "./pages/Chat";
@@ -18,7 +17,7 @@ function useHashRoute() {
 }
 
 export default function App() {
-  useEffect(() => { ensureKpiDefsLoaded(); }, []);
+  // useEffect(() => { ensureKpiDefsLoaded(); }, []);
   const route = useHashRoute();
   
   // Initialize sidebar state from localStorage
@@ -62,7 +61,11 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
   const page = useMemo(() => {
-    if (route.startsWith("/kpi-builder")) return <KpiBuilder />;
+    if (route.startsWith("/kpi-builder")) {
+      // Extract KPI ID from route like /kpi-builder/123-456-789
+      const kpiId = route.includes('/kpi-builder/') ? route.split('/kpi-builder/')[1] : undefined;
+      return <KpiBuilder editingKpiId={kpiId} />;
+    }
     if (route.startsWith("/chat")) return <Chat />;
     if (route.startsWith("/incident")) return <Incident />;
     return <Home />;

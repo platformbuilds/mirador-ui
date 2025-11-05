@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Fonts */
+@font-face {
+  font-family: 'Figtree';
+  src: url('/fonts/Figtree-VariableFont_wght.ttf') format('truetype');
+  font-weight: 300 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans_18pt-Regular.woff') format('woff');
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root { 
+  font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* Dark theme (default) */
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  font-family: Figtree, system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Light theme (default) */
+body {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+/* Dark theme */
+body.dark {
+  background-color: #11161d;
+  color: #f1f5f9;
+}
+
+a { 
+  color: #1b7fff;
+}

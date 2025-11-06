@@ -47,7 +47,21 @@ export function KpiGrid({ defs }: { defs: KpiDef[] }) {
     });
 
     setLayouts(newLayouts);
-  }, [defs, widgetState.layoutById, widgetState.editMode]);
+  }, [defs]); // Only depend on defs for initial layout creation
+
+  // Update static property when editMode changes
+  useEffect(() => {
+    setLayouts(prevLayouts => {
+      const newLayouts = { ...prevLayouts };
+      Object.keys(newLayouts).forEach(bp => {
+        newLayouts[bp] = newLayouts[bp].map(layout => ({
+          ...layout,
+          static: !widgetState.editMode
+        }));
+      });
+      return newLayouts;
+    });
+  }, [widgetState.editMode]);
 
   const handleLayoutChange = useCallback((currentLayout: Layout[], allLayouts: Record<string, Layout[]>) => {
     setLayouts(allLayouts);

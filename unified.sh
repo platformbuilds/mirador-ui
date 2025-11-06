@@ -70,13 +70,13 @@ case $COMMAND in
         docker-compose -f docker-compose.unified.yml ps
         echo ""
         echo "📊 Health check:"
-        if curl -s http://localhost:3000/health > /dev/null; then
+        if curl -s http://localhost:3000/health.html > /dev/null; then
             echo "✅ Frontend: healthy (http://localhost:3000)"
         else
             echo "❌ Frontend: not responding"
         fi
-        if curl -s http://localhost:3000/api/v1/kpi/defs > /dev/null; then
-            echo "✅ Mock API: healthy (http://localhost:3000/api)"
+        if curl -s http://localhost:3001/api/v1/kpi/defs > /dev/null; then
+            echo "✅ Mock API: healthy (http://localhost:3001/api)"
         else
             echo "❌ Mock API: not responding"
         fi
@@ -105,8 +105,8 @@ if [[ "$COMMAND" == "up" || "$COMMAND" == "rebuild" ]]; then
     echo ""
     echo "🌐 Application URLs:"
     echo "   Frontend:  http://localhost:3000"
-    echo "   Mock API:  http://localhost:3000/api"
-    echo "   Health:    http://localhost:3000/health"
+    echo "   Mock API:  http://localhost:3001/api"
+    echo "   Health:    http://localhost:3000/health.html"
     echo ""
     echo "📋 Useful commands:"
     echo "   ./unified.sh logs    - Show live logs"

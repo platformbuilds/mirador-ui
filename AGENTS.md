@@ -11,6 +11,9 @@ All local testing must be performed using Docker containers to ensure consistenc
 - pnpm (for package management)
 - `./unified.sh` script (for simplified container management)
 
+### NGINX SHOULD NOT BE USED
+We dont need nginx to serve web pages. We will serve directly over node
+
 ### Development Setup
 
 For local development with the unified container:
@@ -22,7 +25,7 @@ For local development with the unified container:
 This starts the unified container with:
 - Frontend application (React/TypeScript with iOS widgets)
 - Mock API server (Express.js with KPI data endpoints)
-- Nginx reverse proxy serving static files and routing API calls
+- Node.js HTTP server serving static files directly
 - Single container deployment with both services
 - Health checks and automatic restart
 
@@ -35,8 +38,8 @@ To test the production build locally:
 ```
 
 The unified container provides production-ready features:
-- Multi-stage Alpine Linux build
-- Nginx serving static files
+- Node.js Alpine Linux build
+- Direct static file serving with Node.js HTTP server
 - Security hardening
 - Built-in health checks
 - Optimized for minimal resource usage
@@ -98,7 +101,7 @@ If you need to work with Docker directly:
 docker build -f Dockerfile.unified -t mirador-ui:unified .
 
 # Run the unified container
-docker run -d --name mirador-unified -p 3000:80 mirador-ui:unified
+docker run -d --name mirador-unified -p 3000:3000 mirador-ui:unified
 
 # View logs
 docker logs mirador-unified
@@ -113,10 +116,10 @@ Test the application health:
 
 ```bash
 # Check overall health
-curl http://localhost:3000/health
+curl http://localhost:3000/health.html
 
 # Test API endpoints
-curl http://localhost:3000/api/v1/kpi/defs
+curl http://localhost:3001/api/v1/kpi/defs
 
 # Use the status command
 ./unified.sh status

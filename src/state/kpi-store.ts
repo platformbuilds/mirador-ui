@@ -17,6 +17,11 @@ export const kpiState = proxy<{ defs: KpiDef[]; loadedRemote: boolean }>({
   loadedRemote: false
 });
 
+// Initialize with defaults if empty
+if (!kpiState.defs.length) {
+  seedDefaultKpis();
+}
+
 export function useKpiDefs() {
   return useSnapshot(kpiState).defs;
 }
@@ -29,12 +34,60 @@ export async function ensureKpiDefsLoaded() {
     if (remote?.length) {
       kpiState.defs = remote;
       lsSave(kpiState.defs);
+    } else {
+      // If no remote data, seed with defaults
+      seedDefaultKpis();
     }
     kpiState.loadedRemote = true;
   } catch {
-    // stay on local storage if remote unavailable
+    // stay on local storage if remote unavailable, seed defaults if empty
+    if (!kpiState.defs.length) {
+      seedDefaultKpis();
+    }
     kpiState.loadedRemote = true;
   }
+}
+
+function seedDefaultKpis() {
+  const defaultKpis: KpiDef[] = [
+    {
+      id: "kpi-default-conv",
+      kind: "business",
+      name: "Conversion Rate",
+      unit: "%",
+      format: "pct",
+      query: {
+        type: "formula",
+        expr: "orders / sessions * 100",
+        inputs: {
+          orders: { type: "metric", ref: "orders.count", aggregator: "sum", range: { from: "-60m", to: "now" } },
+          sessions: { type: "metric", ref: "sessions.count", aggregator: "sum", range: { from: "-60m", to: "now" } }
+        }
+      },
+      thresholds: [{ when: "<", value: 2.0, status: "warn" }],
+      tags: ["funnel"], 
+      visibility: "org"
+    },
+    {
+      id: "kpi-default-revenue",
+      kind: "business",
+      name: "Revenue",
+      unit: "₹",
+      format: "currency",
+      query: {
+        type: "metric",
+        ref: "revenue.total",
+        aggregator: "sum",
+        range: { from: "-60m", to: "now" }
+      },
+      thresholds: [{ when: "<", value: 10000, status: "warn" }],
+      tags: ["revenue"],
+      visibility: "org"
+    }
+  ];
+  
+  kpiState.defs = defaultKpis;
+  lsSave(kpiState.defs);
 }
 
 export async function addOrUpdateKpi(def: KpiDef) {

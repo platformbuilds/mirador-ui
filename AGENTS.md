@@ -9,47 +9,102 @@ All local testing must be performed using Docker containers to ensure consistenc
 - Docker Desktop or Rancher Desktop installed and running
 - Docker Compose V2
 - pnpm (for package management)
+- `./unified.sh` script (for simplified container management)
 
 ### Development Setup
 
-For local development with hot reload:
+For local development with the unified container:
 
 ```bash
-pnpm compose:up:dev
+./unified.sh
 ```
 
-This starts the development container with:
-- Hot reload enabled
-- Volume mounting for source code changes
-- Development server on port 3000
+This starts the unified container with:
+- Frontend application (React/TypeScript with iOS widgets)
+- Mock API server (Express.js with KPI data endpoints)
+- Nginx reverse proxy serving static files and routing API calls
+- Single container deployment with both services
+- Health checks and automatic restart
 
 ### Production Testing
 
 To test the production build locally:
 
 ```bash
-pnpm compose:up
+./unified.sh
 ```
 
-This runs the optimized production container with:
+The unified container provides production-ready features:
 - Multi-stage Alpine Linux build
 - Nginx serving static files
 - Security hardening
-- Health checks
+- Built-in health checks
+- Optimized for minimal resource usage
 
-### Manual Docker Commands
+### Unified Container Management
 
-If you need to build and run manually:
+Use the `./unified.sh` script for all container operations:
 
 ```bash
-# Build the image
-docker build -t mirador-ui:latest .
+# Build and start the unified container
+./unified.sh
 
-# Run production container
-docker run -d --name mirador-ui -p 3000:80 mirador-ui:latest
+# Build only
+./unified.sh build
 
-# Run development container
-docker run -d --name mirador-ui-dev -p 3000:5173 -v $(pwd):/app mirador-ui:dev
+# Start only (if already built)
+./unified.sh up
+
+# View live logs
+./unified.sh logs
+
+# Check container status and health
+./unified.sh status
+
+# Stop the container
+./unified.sh down
+
+# Rebuild from scratch
+./unified.sh rebuild
+
+# Clean up container and image
+./unified.sh clean
+```
+
+### Alternative: pnpm Scripts
+
+You can also use pnpm scripts for unified container management:
+
+```bash
+# Build and start
+pnpm unified:rebuild
+
+# Start only
+pnpm unified:up
+
+# Stop container
+pnpm unified:down
+
+# View logs
+pnpm unified:logs
+```
+
+### Manual Docker Commands (Advanced)
+
+If you need to work with Docker directly:
+
+```bash
+# Build the unified image
+docker build -f Dockerfile.unified -t mirador-ui:unified .
+
+# Run the unified container
+docker run -d --name mirador-unified -p 3000:80 mirador-ui:unified
+
+# View logs
+docker logs mirador-unified
+
+# Stop and remove
+docker stop mirador-unified && docker rm mirador-unified
 ```
 
 ### Health Checks
@@ -57,7 +112,14 @@ docker run -d --name mirador-ui-dev -p 3000:5173 -v $(pwd):/app mirador-ui:dev
 Test the application health:
 
 ```bash
+# Check overall health
 curl http://localhost:3000/health
+
+# Test API endpoints
+curl http://localhost:3000/api/v1/kpi/defs
+
+# Use the status command
+./unified.sh status
 ```
 
 Should return: `healthy`
@@ -65,18 +127,24 @@ Should return: `healthy`
 ### Cleanup
 
 ```bash
-# Stop and remove containers
-docker stop mirador-ui && docker rm mirador-ui
-docker stop mirador-ui-dev && docker rm mirador-ui-dev
+# Stop and remove unified container
+./unified.sh down
 
-# Or use docker-compose
-pnpm compose:down
+# Or clean everything including the image
+./unified.sh clean
+
+# Manual cleanup
+docker stop mirador-unified && docker rm mirador-unified
+docker rmi mirador-ui:unified
 ```
 
 ### Best Practices
 
-1. Always test both development and production builds
-2. Use Docker for all local testing scenarios
-3. Verify health checks pass
-4. Test the full application flow in containers
-5. Clean up containers after testing
+1. **Always use `./unified.sh`** for local testing, building, and checking changes
+2. Use Docker for all local testing scenarios to ensure consistency
+3. Verify health checks pass with `./unified.sh status`
+4. Test the full application flow in the unified container
+5. Clean up containers after testing with `./unified.sh down`
+6. The unified container includes both frontend and mock API - no need for separate services
+7. For development changes, use `./unified.sh rebuild` to rebuild and restart
+8. Check logs with `./unified.sh logs` for debugging issues

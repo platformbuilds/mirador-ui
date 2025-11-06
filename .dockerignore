@@ -86,6 +86,7 @@ pids
 tmp/
 temp/
 
-# Mock data and development scripts
-mock/
-*.sh
+# Development scripts (exclude specific ones we need)
+unified.sh
+scaffold_*.sh
+next_*.sh

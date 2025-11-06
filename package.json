@@ -30,7 +30,12 @@
     "compose:down": "docker-compose down",
     "compose:logs": "docker-compose logs -f",
     "compose:build": "docker-compose build",
-    "compose:rebuild": "docker-compose down && docker-compose build && docker-compose up -d"
+    "compose:rebuild": "docker-compose down && docker-compose build && docker-compose up -d",
+    "unified:build": "docker build -f Dockerfile.unified -t mirador-ui:unified .",
+    "unified:up": "docker-compose -f docker-compose.unified.yml up -d",
+    "unified:down": "docker-compose -f docker-compose.unified.yml down",
+    "unified:logs": "docker-compose -f docker-compose.unified.yml logs -f",
+    "unified:rebuild": "docker-compose -f docker-compose.unified.yml down && docker build -f Dockerfile.unified -t mirador-ui:unified . && docker-compose -f docker-compose.unified.yml up -d"
   },
   "dependencies": {
     "@types/react-grid-layout": "^1.3.5",

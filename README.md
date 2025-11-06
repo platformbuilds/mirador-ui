@@ -1,6 +1,60 @@
-# React + TypeScript + Vite
+# Mirador UI - iOS Widgets Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + TypeScript dashboard application featuring iOS-style draggable widgets for KPI monitoring, built with Vite and deployed via Docker.
+
+## ✨ Features
+
+- 📱 **iOS-style Widgets**: Draggable, resizable KPI cards with smooth animations
+- 🎯 **Interactive Grid**: Long-press to enter edit mode, drag to reorder
+- 🔄 **Real-time Data**: Live KPI updates with sparkline charts
+- 🎨 **Modern UI**: Dark/light theme support with Tailwind CSS
+- 🐳 **Docker Ready**: Multiple deployment options including unified container
+- 🧪 **Mock API**: Built-in development server with realistic data
+
+## 🚀 Quick Start
+
+### Unified Container (Recommended)
+
+Single container with frontend + mock API:
+
+```bash
+# Build and start everything
+./unified.sh
+
+# Access at http://localhost:3000
+```
+
+See [UNIFIED.md](./UNIFIED.md) for complete unified container documentation.
+
+### Development Mode
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development server + mock API
+pnpm dev:all
+
+# Access at http://localhost:5173
+```
+
+### Docker Compose (Multi-container)
+
+```bash
+# Development with hot reload
+pnpm compose:up:dev
+
+# Production build
+pnpm compose:up
+```
+
+## 📚 Documentation
+
+- [UNIFIED.md](./UNIFIED.md) - Single container deployment guide
+- [AGENTS.md](./AGENTS.md) - Docker testing requirements
+- [DOCKER.md](./DOCKER.md) - Multi-container setup guide
+
+## 🛠 Technology Stack
 
 Currently, two official plugins are available:
 
